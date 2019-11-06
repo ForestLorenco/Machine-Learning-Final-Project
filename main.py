@@ -24,6 +24,7 @@ for step in range(5000):
 
 
     state, reward, done, info = env.step(env.action_space.sample())
+    print(state.shape)
     env.render()
 
 env.close()
