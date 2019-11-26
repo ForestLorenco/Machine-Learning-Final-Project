@@ -27,7 +27,7 @@ class Worker(object):
         iny = int(ob.shape[1] / 8)
         done = False
 
-        net = neat.nn.FeedForwardNetwork.create(self.genome, self.config)
+        net = neat.nn.RecurrentNetwork.create(self.genome, self.config)
 
         fitness = 0
         xpos = 0
