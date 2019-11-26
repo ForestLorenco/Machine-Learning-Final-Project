@@ -7,8 +7,8 @@ import cv2          # pip install opencv-python
 import neat         # pip install neat-python
 import pickle       # pip install cloudpickle
 
-resume = False
-restore_file = "NeatCheckpoints/neat-checkpoint-31"
+resume = True #set this to true if loading from a checkpoint
+restore_file = "neat-checkpoint-35" #Specify checkpoint name here
 
 class Worker(object):
     def __init__(self, genome, config):
@@ -75,6 +75,7 @@ config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                      'config-feedforward')
 
 if resume == True:
+    print("Restored file from here")
     p = neat.Checkpointer.restore_checkpoint(restore_file)
 else:
     p = neat.Population(config)
