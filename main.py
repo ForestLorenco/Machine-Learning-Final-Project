@@ -8,7 +8,7 @@ import neat         # pip install neat-python
 import pickle       # pip install cloudpickle
 
 resume = True #set this to true if loading from a checkpoint
-restore_file = "neat-checkpoint-35" #Specify checkpoint name here
+restore_file = "neat-checkpoint-103" #Specify checkpoint name here
 
 class Worker(object):
     def __init__(self, genome, config):
@@ -82,7 +82,7 @@ else:
 p.add_reporter(neat.StdOutReporter(True))
 stats = neat.StatisticsReporter()
 p.add_reporter(stats)
-p.add_reporter(neat.Checkpointer(4))
+p.add_reporter(neat.Checkpointer(10))
 
 pe = neat.ParallelEvaluator(4, eval_genomes)
 
@@ -90,34 +90,3 @@ winner = p.run(pe.evaluate)
 
 with open('winner.pkl', 'wb') as output:
     pickle.dump(winner, output, 1)
-'''
-#Our stuff
-env = gym_super_mario_bros.make('SuperMarioBros-1-3-v0')
-env = JoypadSpace(env, SIMPLE_MOVEMENT)
-
-
-done = True
-for step in range(2):
-    if done:
-        state = env.reset()
-    """
-    Reward function is composed of 3 values
-    1) v: the difference in agent x values between states
-        does the agent move right
-    2) c: the difference in the game clock between frames
-    3) d: death penalty
-    
-    note, if mario is stuck on pipe, reward tends to be several 0's and -1, should cancel run after 3 or 4 0s in a row
-    and give a reward of -10 
-    """
-
-
-
-    t = env.action_space.sample()
-    print(t)
-    state, reward, done, info = env.step(t)
-    print(env.action_space)
-    env.render()
-
-env.close()
-'''
