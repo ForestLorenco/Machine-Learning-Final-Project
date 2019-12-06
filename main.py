@@ -8,7 +8,7 @@ import neat         # pip install neat-python
 import pickle       # pip install cloudpickle
 
 resume = True #set this to true if loading from a checkpoint
-restore_file = "neat-checkpoint-103" #Specify checkpoint name here
+restore_file = "neat-checkpoint-3" #Specify checkpoint name here
 
 class Worker(object):
     def __init__(self, genome, config):
@@ -27,7 +27,7 @@ class Worker(object):
         iny = int(ob.shape[1] / 8)
         done = False
 
-        net = neat.nn.RecurrentNetwork.create(self.genome, self.config)
+        net = neat.nn.FeedForwardNetwork.create(self.genome, self.config)
 
         fitness = 0
         xpos = 0
@@ -87,6 +87,9 @@ p.add_reporter(neat.Checkpointer(10))
 pe = neat.ParallelEvaluator(4, eval_genomes)
 
 winner = p.run(pe.evaluate)
+visualize.draw_net(config, winner, True)
+visualize.plot_stats(stats, ylog=False, view=True)
+visualize.plot_species(stats, view=True)
 
 with open('winner.pkl', 'wb') as output:
     pickle.dump(winner, output, 1)
