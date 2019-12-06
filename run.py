@@ -20,17 +20,19 @@ def run(file):
     try:
         while info['distance'] != 3252:
             obs = env.reset()
+            inx = int(obs.shape[0] / 8)
+            iny = int(obs.shape[1] / 8)
             done = False
             i = 0
             old = 40
             while not done:
-                ob = cv2.resize(ob, (inx, iny))
-                ob = cv2.cvtColor(ob, cv2.COLOR_BGR2GRAY)
-                ob = np.reshape(ob, (inx, iny))
+                obs = cv2.resize(obs, (inx, iny))
+                obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY)
+                obs = np.reshape(obs, (inx, iny))
 
-                imgarray = np.ndarray.flatten(ob)
+                imgarray = np.ndarray.flatten(obs)
                 
-                output = net.activate(imgarray)
+                actions = net.activate(imgarray)
                 action = np.argmax(actions)
                 s, reward, done, info = env.step(action)
                 obs = s

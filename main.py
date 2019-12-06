@@ -6,6 +6,7 @@ import numpy as np  # pip install numpy
 import cv2          # pip install opencv-python
 import neat         # pip install neat-python
 import pickle       # pip install cloudpickle
+import visualize    # pip install graphviz
 
 resume = True #set this to true if loading from a checkpoint
 restore_file = "neat-checkpoint-3" #Specify checkpoint name here
