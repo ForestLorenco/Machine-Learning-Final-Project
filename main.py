@@ -1,12 +1,12 @@
-from nes_py.wrappers import JoypadSpace
+import pickle       # pip install cloudpickle
 import gym_super_mario_bros
-from gym_super_mario_bros.actions import SIMPLE_MOVEMENT
-import retro        # pip install gym-retro
 import numpy as np  # pip install numpy
 import cv2          # pip install opencv-python
 import neat         # pip install neat-python
-import pickle       # pip install cloudpickle
 import visualize    # pip install graphviz
+
+from nes_py.wrappers import JoypadSpace
+from gym_super_mario_bros.actions import SIMPLE_MOVEMENT
 
 resume = True #set this to true if loading from a checkpoint
 restore_file = "neat-checkpoint-3" #Specify checkpoint name here
@@ -15,10 +15,9 @@ class Worker(object):
     def __init__(self, genome, config):
         self.genome = genome
         self.config = config
+        self.env = gym_super_mario_bros.make('SuperMarioBros-1-3-v3')
 
     def work(self):
-
-        self.env = gym_super_mario_bros.make('SuperMarioBros-1-3-v3')
 
         self.env.reset()
 
