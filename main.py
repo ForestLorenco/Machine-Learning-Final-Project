@@ -9,13 +9,13 @@ from nes_py.wrappers import JoypadSpace
 from gym_super_mario_bros.actions import RIGHT_ONLY
 
 resume = True #set this to true if loading from a checkpoint
-restore_file = "neat-checkpoint-489" #Specify checkpoint name here
+restore_file = "neat-checkpoint-513" #Specify checkpoint name here
 
 class Worker(object):
     def __init__(self, genome, config):
         self.genome = genome
         self.config = config
-        env = gym_super_mario_bros.make('SuperMarioBros-1-1-v3')
+        env = gym_super_mario_bros.make('SuperMarioBros-1-1-v2')
         self.env = JoypadSpace(env, RIGHT_ONLY)
 
     def work(self):
