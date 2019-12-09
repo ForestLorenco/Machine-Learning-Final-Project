@@ -1,7 +1,6 @@
 from nes_py.wrappers import JoypadSpace
 import gym_super_mario_bros
-from gym_super_mario_bros.actions import SIMPLE_MOVEMENT
-import retro        # pip install gym-retro
+from gym_super_mario_bros.actions import RIGHT_ONLY
 import numpy as np  # pip install numpy
 import cv2          # pip install opencv-python
 import neat         # pip install neat-python
@@ -14,39 +13,45 @@ def run(file):
                      'config-feedforward')
 
     genome = pickle.load(open(file, 'rb'))
-    env = gym_super_mario_bros.make('SuperMarioBros-1-3-v3')
+    print(genome)
+    env = gym_super_mario_bros.make('SuperMarioBros-1-1-v3')
+    env = JoypadSpace(env, RIGHT_ONLY)
+
+    env1 = gym_super_mario_bros.make('SuperMarioBros-1-1-v0')
+    env1 = JoypadSpace(env1, RIGHT_ONLY)
+
+
     net = neat.nn.FeedForwardNetwork.create(genome, config)
-    info = {'distance': 0}
     try:
-        while info['distance'] != 3252:
-            obs = env.reset()
-            inx = int(obs.shape[0] / 8)
-            iny = int(obs.shape[1] / 8)
-            done = False
-            i = 0
-            old = 40
-            while not done:
-                obs = cv2.resize(obs, (inx, iny))
-                obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY)
-                obs = np.reshape(obs, (inx, iny))
+        obs = env.reset()
+        env1.reset()
 
-                imgarray = np.ndarray.flatten(obs)
-                
-                actions = net.activate(imgarray)
-                action = np.argmax(actions)
-                s, reward, done, info = env.step(action)
-                obs = s
-                i += 1
-                if i % 50 == 0:
-                    if old == info['distance']:
-                        break
+        inx = int(obs.shape[0] / 8)
+        iny = int(obs.shape[1] / 8)
+        done = False
+        while not done:
+            env.render()
+            #env1.render()
+            obs = cv2.resize(obs, (inx, iny))
+            obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY)
+            obs = np.reshape(obs, (inx, iny))
 
-                    else:
-                        old = info['distance']
-            print("Distance: {}".format(info['distance']))
+            imgarray = np.ndarray.flatten(obs)
+
+            actions = net.activate(imgarray)
+            action = np.argmax(actions)
+            _,_,_,info1 = env1.step(action)
+            s, reward, done, info = env.step(action)
+            xpos = info['x_pos']
+
+
+            print(done, action, xpos, info1['x_pos'])
+            obs = s
+        env1.close()
         env.close()
     except KeyboardInterrupt:
         env.close()
+        env1.close()
         exit()
 if __name__ == "__main__":
     run('winner.pkl')

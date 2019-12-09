@@ -6,22 +6,21 @@ import neat         # pip install neat-python
 import visualize    # pip install graphviz
 
 from nes_py.wrappers import JoypadSpace
-from gym_super_mario_bros.actions import SIMPLE_MOVEMENT
+from gym_super_mario_bros.actions import RIGHT_ONLY
 
 resume = True #set this to true if loading from a checkpoint
-restore_file = "neat-checkpoint-3" #Specify checkpoint name here
+restore_file = "neat-checkpoint-489" #Specify checkpoint name here
 
 class Worker(object):
     def __init__(self, genome, config):
         self.genome = genome
         self.config = config
-        self.env = gym_super_mario_bros.make('SuperMarioBros-1-3-v3')
+        env = gym_super_mario_bros.make('SuperMarioBros-1-1-v3')
+        self.env = JoypadSpace(env, RIGHT_ONLY)
 
     def work(self):
 
-        self.env.reset()
-
-        ob, _, _, _ = self.env.step(self.env.action_space.sample())
+        ob = self.env.reset()
 
         inx = int(ob.shape[0] / 8)
         iny = int(ob.shape[1] / 8)
@@ -43,7 +42,7 @@ class Worker(object):
 
             imgarray = np.ndarray.flatten(ob)
 
-
+            #print("Test",self.env.action_space)
             actions = net.activate(imgarray)
             action = np.argmax(actions)
 
@@ -54,20 +53,22 @@ class Worker(object):
             if xpos > xpos_max:
                 xpos_max = xpos
                 counter = 0
-                fitness += 10
             else:
                 counter += 1
 
             if counter > 250:
                 done = True
+            if info['flag_get']:
+                print("Finished")
+                done = True
 
-        print(fitness)
-        return fitness
+        print("Worker Fitness:{}".format(xpos))
+        return int(xpos)
 
 
 def eval_genomes(genome, config):
-    worky = Worker(genome, config)
-    return worky.work()
+    worker = Worker(genome, config)
+    return worker.work()
 
 
 config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
@@ -84,12 +85,13 @@ stats = neat.StatisticsReporter()
 p.add_reporter(stats)
 p.add_reporter(neat.Checkpointer(10))
 
-pe = neat.ParallelEvaluator(4, eval_genomes)
+pe = neat.ParallelEvaluator(6, eval_genomes)
 
 winner = p.run(pe.evaluate)
-visualize.draw_net(config, winner, True)
-visualize.plot_stats(stats, ylog=False, view=True)
-visualize.plot_species(stats, view=True)
+#visualize.draw_net(config, winner, True)
+#visualize.plot_stats(stats, ylog=False, view=True)
+#visualize.plot_species(stats, view=True)
 
 with open('winner.pkl', 'wb') as output:
-    pickle.dump(winner, output, 1)
+    pickle.dump(winner, output)
+print(winner)
