@@ -9,7 +9,9 @@ from nes_py.wrappers import JoypadSpace
 from gym_super_mario_bros.actions import RIGHT_ONLY
 
 resume = True #set this to true if loading from a checkpoint
-restore_file = "neat-checkpoint-513" #Specify checkpoint name here
+restore_file = "neat-checkpoint-584" #Specify checkpoint name here
+averages = []
+best = []
 
 class Worker(object):
     def __init__(self, genome, config):
@@ -87,11 +89,21 @@ p.add_reporter(neat.Checkpointer(10))
 
 pe = neat.ParallelEvaluator(6, eval_genomes)
 
-winner = p.run(pe.evaluate)
+winner = p.run(pe.evaluate,1)
+print(stats.most_fit_genomes)
+averages = stats.best_genomes(500)
+file = open("stats.csv","w")
+i = 1
+file.write("Generations, Best Fitness\n")
+for g in averages:
+    file.write(str(i)+ ","+str(g.fitness))
+    i+= 1
+file.close()
+
 #visualize.draw_net(config, winner, True)
 #visualize.plot_stats(stats, ylog=False, view=True)
 #visualize.plot_species(stats, view=True)
 
 with open('winner.pkl', 'wb') as output:
     pickle.dump(winner, output)
-print(winner)
+#print(winner)
