@@ -17,7 +17,7 @@ def run(file):
     env = gym_super_mario_bros.make('SuperMarioBros-1-1-v2')
     env = JoypadSpace(env, RIGHT_ONLY)
 
-    env1 = gym_super_mario_bros.make('SuperMarioBros-1-1-v1')
+    env1 = gym_super_mario_bros.make('SuperMarioBros-1-1-v0')
     env1 = JoypadSpace(env1, RIGHT_ONLY)
 
 
@@ -30,7 +30,7 @@ def run(file):
         iny = int(obs.shape[1] / 8)
         done = False
         while not done:
-            env.render()
+            #env.render()
             env1.render()
             obs = cv2.resize(obs, (inx, iny))
             obs = cv2.cvtColor(obs, cv2.COLOR_BGR2GRAY)
