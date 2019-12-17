@@ -9,7 +9,7 @@ from nes_py.wrappers import JoypadSpace
 from gym_super_mario_bros.actions import RIGHT_ONLY
 
 resume = True #set this to true if loading from a checkpoint
-restore_file = "neat-checkpoint-584" #Specify checkpoint name here
+restore_file = "neat-checkpoint-8294" #Specify checkpoint name here
 averages = []
 best = []
 
@@ -89,14 +89,14 @@ p.add_reporter(neat.Checkpointer(10))
 
 pe = neat.ParallelEvaluator(6, eval_genomes)
 
-winner = p.run(pe.evaluate,1)
+winner = p.run(pe.evaluate, 300)
 print(stats.most_fit_genomes)
 averages = stats.best_genomes(500)
 file = open("stats.csv","w")
 i = 1
 file.write("Generations, Best Fitness\n")
 for g in averages:
-    file.write(str(i)+ ","+str(g.fitness))
+    file.write(str(i)+ ","+str(g.fitness)+"\n")
     i+= 1
 file.close()
 

@@ -55,4 +55,4 @@ def run(file):
         env1.close()
         exit()
 if __name__ == "__main__":
-    run('winner.pkl')
+    run('BestWinner/winner.pkl')
